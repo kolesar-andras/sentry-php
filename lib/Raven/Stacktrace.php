@@ -85,7 +85,7 @@ class Raven_Stacktrace
             $data = array(
                 'filename' => $context['filename'],
                 'lineno' => (int) $context['lineno'],
-                'function' => isset($nextframe['function']) ? $nextframe['function'] : null,
+                'function' => isset($nextframe['function']) ? self::utf($nextframe['function']) : null,
                 'pre_context' => $serializer->serialize($context['prefix']),
                 'context_line' => $serializer->serialize($context['line']),
                 'post_context' => $serializer->serialize($context['suffix']),
@@ -308,4 +308,14 @@ class Raven_Stacktrace
 
         return $frame;
     }
+
+    public static function utf($string) {
+	if (mb_check_encoding($string, 'UTF-8')) {
+	    return $string;
+	} else {
+	    return iconv('Windows-1250', 'UTF-8', $string);
+	}
+    }
+
+
 }
